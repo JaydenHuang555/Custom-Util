@@ -14,6 +14,7 @@ public class HashTable<K extends Object, V extends Object> {
         public K key(){
             return (K)node.key;
         }
+
         @SuppressWarnings("unchecked")
         public V val(){
             return (V)node.val;
@@ -42,6 +43,7 @@ public class HashTable<K extends Object, V extends Object> {
             next.next = new Node(key, val);
         }
     }
+
     @SuppressWarnings("unchecked")
     public V get(K key){
         if(!contains(key)) throw new RuntimeException("invalid key");
