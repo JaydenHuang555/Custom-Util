@@ -1,5 +1,5 @@
 package jay.util;
 
-public interface ForEachFunc {
-    public void f(Object o);
+public interface ForEachFunc<T> {
+    public void f(T o);
 }
