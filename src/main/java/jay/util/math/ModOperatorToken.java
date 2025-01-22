@@ -1,7 +1,7 @@
 package jay.util.math;
 
 public class ModOperatorToken extends OperatorToken{
-    protected ModOperatorToken() {
+    public ModOperatorToken() {
         super("%", 2);
     }
 

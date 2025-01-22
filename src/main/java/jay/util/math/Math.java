@@ -1,6 +1,6 @@
 package jay.util.math;
 
-import jay.util.OrderdList;
+import jay.util.OrderedList;
 import jay.util.StringBuilder;
 
 import jay.util.hashtable.HashTable;
@@ -9,7 +9,6 @@ import jay.util.stack.Stack;
 public class Math {
 
     public final static double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825;
-
 
     private final static HashTable<Character, OperatorToken> precMap = new HashTable<>();
 
@@ -35,7 +34,7 @@ public class Math {
     }
 
     public final static double eval(final String equation){
-        OrderdList<Token> tokens = new OrderdList<>();
+        OrderedList<Token> tokens = new OrderedList<>();
         Stack<Token> stack = new Stack<>();
 
         StringBuilder builder = new StringBuilder();
@@ -63,7 +62,7 @@ public class Math {
                         stack.push(OperatorToken.of(Character.toString(c)));
                 }
             }
-            if(('0' - 1 < c && c < '9' + 1) || c == '.') builder.add(c);
+            if(('0' - 1 < c && c < '9' + 1) || c == '.') builder.append(c);
         }
         if(!builder.isEmpty()) tokens.add(new OperandToken(builder.toString()));
         while(!stack.isEmpty())

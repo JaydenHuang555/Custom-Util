@@ -1,5 +1,7 @@
 package jay.util;
 
+import static jay.util.Util.memset;
+
 public class StringBuilder {
 
     private char buffer[] = null;
@@ -9,7 +11,7 @@ public class StringBuilder {
         buffer = new char[len];
     }
 
-    public void add(final char c){
+    public void append(final char c){
         buffer[off++] = c;
         if(off == len){
             char next[] = new char[len *= 2];
@@ -18,14 +20,25 @@ public class StringBuilder {
         }
     }
 
-    public void add(final String s){
+    public void append(final String s){
         for(int i = 0; i < s.length(); i++)
-            add(s.charAt(i));
+            append(s.charAt(i));
     }
 
-    public void add(final OrderdList<?> list){
+    public void append(Object o){
+        append(o.toString());
+    }
+
+    public void append(final OrderedList<?> list){
         for(int i = 0; i < list.size(); i++)
-            add(list.get(i).toString());
+            append(list.get(i).toString());
+    }
+
+    public void push(final char c){
+        char next[] = new char[++off];
+        for(int i = 1; i < next.length; i++) next[i] = buffer[i];
+        next[0] = c;
+        buffer = next;
     }
 
     public int size(){

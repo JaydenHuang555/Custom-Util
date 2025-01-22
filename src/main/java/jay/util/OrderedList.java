@@ -1,22 +1,23 @@
 package jay.util;
 
-public class OrderdList<T extends Object> {
+public class OrderedList<T extends Object> {
 
     private int off = 0, len = 1 << 3;
-    private Object buffer[] = new Object[len];
+    private Object buffer[] = null;
 
-    public OrderdList(){
+    public OrderedList(){
         buffer = new Object[len];
     }
     @SuppressWarnings("unchecked")
-    public OrderdList(final OrderdList<?> other){
+    public OrderedList(final OrderedList<?> other){
         off = other.off;
         len = other.len;
+        buffer = new Object[len];
         for(int i = 0; i < other.len; i++) add((T)other.buffer[i]);
     }
 
-    public static <T> OrderdList<T> of(T incoming[]){
-        OrderdList<T> list = new OrderdList<>();
+    public static <T> OrderedList<T> of(T incoming[]){
+        OrderedList<T> list = new OrderedList<>();
         for(int i = 0; i < incoming.length; i++) list.add(incoming[i]);
         return list;
     }
@@ -35,21 +36,29 @@ public class OrderdList<T extends Object> {
         return (T)buffer[index];
     }
 
+    public boolean contains(T item){
+        for(int i = 0; i < off; i++)
+            if(buffer[i].hashCode() == item.hashCode())
+                return true;
+        return false;
+    }
+
     public int size(){
         return off;
     }
 
-    public void foreach(ForEachFunc f){
-        for(int i = 0; i < off; i++) f.f(buffer[i]);
+    @SuppressWarnings("unchecked")
+    public void foreach(ForEachFunc<T> f){
+        for(int i = 0; i < off; i++) f.f((T)buffer[i]);
     }
 
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        builder.add("{ ");
+        builder.append("{ ");
         for(int i = 0; i < off; i++)
-            builder.add(String.format("%s, ", buffer[i].toString()));
-        builder.add("\b\b }");
+            builder.append(String.format("%s, ", buffer[i].toString()));
+        builder.append("\b\b }");
         return builder.toString();
     }
 
