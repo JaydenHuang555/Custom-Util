@@ -3,24 +3,38 @@ package jay.util.math;
 import jay.util.OrderdList;
 import jay.util.StringBuilder;
 
-import java.util.Stack;
+import jay.util.hashtable.HashTable;
+import jay.util.stack.Stack;
 
 public class Math {
 
+    public final static double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825;
+
+
+    private final static HashTable<Character, OperatorToken> precMap = new HashTable<>();
+
+    static {
+        precMap.put('+', new AddOperatorToken());
+        precMap.put('-', new SubOperatorToken());
+        precMap.put('*', new MultiOperatorToken());
+        precMap.put('%', new ModOperatorToken());
+    }
+
     public static int operatorPrec(final char c){
-        switch(c){
-            case '+':
-            case '-':
-                return 1;
-            case '*':
-            case '/':
-                return 2;
-            default: return 0;
-        }
+        if(!precMap.contains(c)) throw new RuntimeException("unsupported operator found");
+        return precMap.get(c).prec();
+    }
+
+    private static double pwr(int n, int p, int j){
+        if(n == 1) return p;
+        return pwr(--n, p * j, j);
+    }
+
+    public final static double pwr(int p, int n){
+        return pwr(n, p, n);
     }
 
     public final static double eval(final String equation){
-
         OrderdList<Token> tokens = new OrderdList<>();
         Stack<Token> stack = new Stack<>();
 
@@ -33,13 +47,38 @@ public class Math {
                     tokens.add(new OperandToken(builder.toString()));
                     builder = new StringBuilder();
                 }
-                while(!stack.isEmpty() && ((OperatorToken)stack.peek()).prec() > operatorPrec(c))
-                    tokens.add(stack.pop());
+                switch(c){
+                    case '(':
+                        stack.push(new ParaToken());
+                        break;
+                    case ')':
+                        while(!stack.isEmpty() && !(stack.peek() instanceof ParaToken)) {
+                            tokens.add(stack.pop());
+                        }
+                        stack.pop();
+                        break;
+                    default:
+                        while(!stack.isEmpty() && ((OperatorToken)stack.peek()).prec() > operatorPrec(c))
+                            tokens.add(stack.pop());
+                        stack.push(OperatorToken.of(Character.toString(c)));
+                }
+            }
+            if(('0' - 1 < c && c < '9' + 1) || c == '.') builder.add(c);
+        }
+        if(!builder.isEmpty()) tokens.add(new OperandToken(builder.toString()));
+        while(!stack.isEmpty())
+            tokens.add(stack.pop());
 
+        for(int i = 0; i < tokens.size(); i++){
+            Token token = tokens.get(i);
+            if(token instanceof OperandToken) stack.push(token);
+            if(token instanceof OperatorToken){
+                OperandToken r = (OperandToken) stack.pop();
+                OperandToken l = (OperandToken) stack.pop();
+                stack.push(((OperatorToken)token).eval(l,r));
             }
         }
-
-        return 0;
+        return ((OperandToken)stack.pop()).get();
     }
 
 }
