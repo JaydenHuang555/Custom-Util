@@ -24,15 +24,20 @@ public class Math {
         return precMap.get(c).prec();
     }
 
-    private static double pwr(int n, int p, int j){
-        if(n == 1) return p;
-        return pwr(--n, p * j, j);
-    }
 
     public final static double pwr(int p, int n){
-        return pwr(n, p, n);
+        if(n == 0) return 1;
+        if(n < 0) return 1 / pwr(p, -n);
+        else return p * pwr(p, n - 1);
     }
 
+    /**
+     *
+     * @param equation string form of the equation
+     * @return the pemdas evaluation
+     *
+     * uses postfix notation and the shunting algorithm for efficiency
+     */
     public final static double eval(final String equation){
         OrderedList<Token> tokens = new OrderedList<>();
         Stack<Token> stack = new Stack<>();

@@ -3,6 +3,9 @@ package jay.util;
 import java.io.File;
 import java.io.PrintWriter;
 
+/**
+ * @info meant to be an class that can do basic simple logging that supports more advanced method
+ */
 public abstract class AbstractLogger {
 
     public final String outputFile;

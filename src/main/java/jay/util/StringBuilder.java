@@ -2,7 +2,10 @@ package jay.util;
 
 import static jay.util.Util.memset;
 
-public class StringBuilder {
+/**
+ * string appending in java creates a new string cause java is stupid
+ */
+public final class StringBuilder {
 
     private char buffer[] = null;
     private int off = 0, len = 1 << 3;
