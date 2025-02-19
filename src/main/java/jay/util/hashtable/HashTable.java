@@ -1,5 +1,4 @@
 package jay.util.hashtable;
-
 import jay.util.ForEachFunc;
 
 public class HashTable<K extends Object, V extends Object> {
@@ -7,9 +6,10 @@ public class HashTable<K extends Object, V extends Object> {
     public final class Entry {
         private final Node node;
 
-        private Entry(Node node){
+        public Entry(final Node node){
             this.node = node;
         }
+
         @SuppressWarnings("unchecked")
         public K key(){
             return (K)node.key;
@@ -22,51 +22,69 @@ public class HashTable<K extends Object, V extends Object> {
 
     }
 
-    private final int MAX = 1 << 9;
-
-    private int hash(Object o){
-        return (o.hashCode() << 5) % MAX;
-    }
+    private final int MAX;
 
     private final Node table[];
 
+    private int hash(final Object o){
+        return (o.hashCode() << 5) % MAX;
+    }
+
     public HashTable(){
+        this.MAX = 0x400;
+        table = new Node[MAX];
+    }
+
+    public HashTable(final int MAX){
+        this.MAX = MAX;
         table = new Node[MAX];
     }
 
     public void put(K key, V val){
-        int index = hash(key);
-        if(table[index] == null) table[index] = new Node(key, val);
-        else {
-            Node next = table[index];
-            while(next.next != null) next = next.next;
-            next.next = new Node(key, val);
-        }
+        Node next = table[hash(key)];
+        if(next == null)
+            next = new Node(key, val);
+         int i = 0, cap = 0x400;
+         while(next.next != null){
+             if(i++ == cap) throw new RuntimeException("iteration reached cap");
+             next = next.next;
+         }
+         next.next = new Node(key, val);
     }
 
     @SuppressWarnings("unchecked")
     public V get(K key){
-        if(!contains(key)) throw new RuntimeException("invalid key");
-        Node node = table[hash(key)];
-        while(node != null){
-            if(node.key.hashCode() == key.hashCode()) return (V)node.val;
-            node = node.next;
+        Node next = table[hash(key)];
+        int i = 0, cap = 0x400;
+        while(next != null){
+            if(i++ == cap) throw new RuntimeException("iteration reached cap");
+            if(next.key.hashCode() == key.hashCode()) return (V)next.val;
+            next = next.next;
         }
-        throw new RuntimeException("error when checking if table contains key");
+        throw new RuntimeException("table does not contain key");
     }
 
     public boolean contains(K key){
-        Node node = table[hash(key)];
-        while(node != null){
-            if(node.key.hashCode() == key.hashCode()) return true;
-            node = node.next;
+        Node next = table[hash(key)];
+        int i = 0, cap = 0x400;
+        while(next != null){
+            if(i++ == cap) throw new RuntimeException("iteration reached cap");
+            if(next.key.hashCode() == key.hashCode()) return true;
+            next = next.next;
         }
         return false;
     }
 
     public void foreach(ForEachFunc<Entry> f){
         for(int i = 0; i < MAX; i++)
-            if(table[i] != null) f.f(new Entry(table[i]));
+            if(table[i] != null){
+                Node next = table[i];
+                int j = 0, cap = 0x400;
+                while(next != null){
+                    if(j++ == cap) throw new RuntimeException("iteration reached cap");
+                    f.f(new Entry(next));
+                }
+            }
     }
 
 }

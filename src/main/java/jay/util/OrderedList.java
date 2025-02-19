@@ -1,13 +1,22 @@
 package jay.util;
 
-public class OrderedList<T extends Object> {
+import java.util.Iterator;
+
+public class OrderedList<T extends Object> implements Iterable<T> {
 
     private int off = 0, len = 1 << 3;
-    private Object buffer[] = null;
+    private Object buffer[] = new Object[len];
 
     public OrderedList(){
-        buffer = new Object[len];
+
     }
+
+    public OrderedList(T arr[]){
+        for(int i = 0; i < arr.length; i++) add(arr[i]);
+    }
+
+
+
     @SuppressWarnings("unchecked")
     public OrderedList(final OrderedList<?> other){
         off = other.off;
@@ -53,6 +62,11 @@ public class OrderedList<T extends Object> {
     }
 
     @Override
+    public Iterator<T> iterator(){
+        return new OrderedListIterator(this);
+    }
+
+    @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
         builder.append("{ ");
@@ -60,6 +74,26 @@ public class OrderedList<T extends Object> {
             builder.append(String.format("%s, ", buffer[i].toString()));
         builder.append("\b\b }");
         return builder.toString();
+    }
+
+    private class OrderedListIterator implements Iterator<T> {
+        private int off = 0;
+        private OrderedList<T> orderedList;
+
+        private OrderedListIterator(OrderedList<T> orderedList){
+            this.orderedList = orderedList;
+        }
+
+
+        @Override
+        public boolean hasNext() {
+            return off < orderedList.size();
+        }
+
+        @Override
+        public T next() {
+            return orderedList.get(off++);
+        }
     }
 
 }

@@ -24,11 +24,16 @@ public class Math {
         return precMap.get(c).prec();
     }
 
-
-    public final static double pwr(int p, int n){
+    public final static double pwr(double p, double n){
         if(n == 0) return 1;
         if(n < 0) return 1 / pwr(p, -n);
         else return p * pwr(p, n - 1);
+    }
+
+    public final static long factorial(long b){
+        long ret = 1;
+        for(int i = 0; i <= b; i++) ret = ret * b;
+        return ret;
     }
 
     /**

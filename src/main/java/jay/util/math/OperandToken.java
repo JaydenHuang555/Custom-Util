@@ -14,6 +14,4 @@ public class OperandToken extends Token{
         return Double.parseDouble(toString());
     }
 
-
-
 }
