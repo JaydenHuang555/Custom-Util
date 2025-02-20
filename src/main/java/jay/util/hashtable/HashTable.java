@@ -1,7 +1,11 @@
 package jay.util.hashtable;
 import jay.util.ForEachFunc;
+import jay.util.OrderedList;
+import jdk.nashorn.internal.runtime.arrays.IteratorAction;
 
-public class HashTable<K extends Object, V extends Object> {
+import java.util.Iterator;
+
+public class HashTable<K extends Object, V extends Object> implements Iterable {
 
     public final class Entry {
         private final Node node;
@@ -79,12 +83,38 @@ public class HashTable<K extends Object, V extends Object> {
         for(int i = 0; i < MAX; i++)
             if(table[i] != null){
                 Node next = table[i];
-                int j = 0, cap = 0x400;
                 while(next != null){
-                    if(j++ == cap) throw new RuntimeException("iteration reached cap");
                     f.f(new Entry(next));
+                    next = next.next;
                 }
             }
+    }
+
+    @Override
+    public Iterator<Entry> iterator(){
+        return new HashTableIterator(this);
+    }
+
+    private final class HashTableIterator implements Iterator {
+
+        private OrderedList<Entry> entries;
+        private int offset = 0;
+
+        private HashTableIterator(final HashTable<K, V> hashtable){
+            hashtable.foreach(
+                    (Entry o) -> entries.add(o)
+            );
+        }
+
+        @Override
+        public boolean hasNext() {
+            return offset < entries.size();
+        }
+
+        @Override
+        public Object next() {
+            return entries.get(offset++);
+        }
     }
 
 }

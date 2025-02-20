@@ -12,14 +12,12 @@ public abstract class PeriodicClass {
 
         @Override
         public void run(){
+
             object.periodic();
         }
     }
 
-
-    protected PeriodicClass(){
-    }
+    protected PeriodicClass(){}
 
     public abstract void periodic();
-
 }

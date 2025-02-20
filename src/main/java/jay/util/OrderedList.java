@@ -7,15 +7,12 @@ public class OrderedList<T extends Object> implements Iterable<T> {
     private int off = 0, len = 1 << 3;
     private Object buffer[] = new Object[len];
 
-    public OrderedList(){
-
-    }
+    public OrderedList(){}
 
     public OrderedList(T arr[]){
         for(int i = 0; i < arr.length; i++) add(arr[i]);
     }
-
-
+    
 
     @SuppressWarnings("unchecked")
     public OrderedList(final OrderedList<?> other){
