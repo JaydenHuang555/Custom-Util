@@ -1,11 +1,12 @@
 package jay.util.hashtable;
+
+
 import jay.util.ForEachFunc;
 import jay.util.OrderedList;
-import jdk.nashorn.internal.runtime.arrays.IteratorAction;
 
 import java.util.Iterator;
 
-public class HashTable<K extends Object, V extends Object> implements Iterable {
+public class HashTable<K extends Object, V extends Object> implements Iterable<HashTable.Entry> {
 
     public final class Entry {
         private final Node node;
@@ -30,8 +31,13 @@ public class HashTable<K extends Object, V extends Object> implements Iterable {
 
     private final Node table[];
 
-    private int hash(final Object o){
+    private int hash(final K o){
         return (o.hashCode() << 5) % MAX;
+    }
+
+    @SuppressWarnings("unchecked")
+    private int hash(Node node) {
+        return hash((K)node.key);
     }
 
     public HashTable(){
@@ -45,15 +51,20 @@ public class HashTable<K extends Object, V extends Object> implements Iterable {
     }
 
     public void put(K key, V val){
-        Node next = table[hash(key)];
-        if(next == null)
-            next = new Node(key, val);
-         int i = 0, cap = 0x400;
-         while(next.next != null){
-             if(i++ == cap) throw new RuntimeException("iteration reached cap");
-             next = next.next;
-         }
-         next.next = new Node(key, val);
+        Node theta = new Node(key, val);
+        if(table[hash(theta)] == null)
+            table[hash(theta)] = theta;
+        else {
+            Node next = table[hash(theta)];
+            while(next.next != null) next = next.next;
+            next.next = theta;
+        }
+    }
+
+    public void put(K keys[], V vals[]){
+        if(keys.length != vals.length) throw new RuntimeException("arrays are not of same size");
+        for(int i = 0; i < vals.length; i++)
+            put(keys[i], vals[i]);
     }
 
     @SuppressWarnings("unchecked")
@@ -69,13 +80,14 @@ public class HashTable<K extends Object, V extends Object> implements Iterable {
     }
 
     public boolean contains(K key){
-        Node next = table[hash(key)];
-        int i = 0, cap = 0x400;
-        while(next != null){
-            if(i++ == cap) throw new RuntimeException("iteration reached cap");
-            if(next.key.hashCode() == key.hashCode()) return true;
-            next = next.next;
-        }
+        for(Entry entry : this)
+            if(entry.key().hashCode() == key.hashCode()) return true;
+        return false;
+    }
+
+    public boolean containsVal(V val){
+        for(Entry entry : this)
+            if(entry.val().hashCode() == val.hashCode()) return true;
         return false;
     }
 
@@ -91,13 +103,13 @@ public class HashTable<K extends Object, V extends Object> implements Iterable {
     }
 
     @Override
-    public Iterator<Entry> iterator(){
+    public Iterator<HashTable.Entry> iterator(){
         return new HashTableIterator(this);
     }
 
-    private final class HashTableIterator implements Iterator {
+    private final class HashTableIterator implements Iterator<HashTable.Entry> {
 
-        private OrderedList<Entry> entries;
+        private final OrderedList<Entry> entries = new OrderedList<>();
         private int offset = 0;
 
         private HashTableIterator(final HashTable<K, V> hashtable){
@@ -112,7 +124,7 @@ public class HashTable<K extends Object, V extends Object> implements Iterable {
         }
 
         @Override
-        public Object next() {
+        public Entry next() {
             return entries.get(offset++);
         }
     }

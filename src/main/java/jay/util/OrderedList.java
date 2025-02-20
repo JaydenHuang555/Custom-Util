@@ -1,16 +1,19 @@
 package jay.util;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class OrderedList<T extends Object> implements Iterable<T> {
 
-    private int off = 0, len = 1 << 3;
+    private int off = 0, len = 0x10;
     private Object buffer[] = new Object[len];
 
-    public OrderedList(){}
+    public OrderedList(){
+
+    }
 
     public OrderedList(T arr[]){
-        for(int i = 0; i < arr.length; i++) add(arr[i]);
+        addAll(arr);
     }
     
 
@@ -20,6 +23,10 @@ public class OrderedList<T extends Object> implements Iterable<T> {
         len = other.len;
         buffer = new Object[len];
         for(int i = 0; i < other.len; i++) add((T)other.buffer[i]);
+    }
+
+    public void addAll(T arr[]){
+        for(int i = 0; i < arr.length; i++) add(arr[i]);
     }
 
     public static <T> OrderedList<T> of(T incoming[]){

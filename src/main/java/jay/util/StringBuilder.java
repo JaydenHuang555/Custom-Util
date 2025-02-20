@@ -1,5 +1,7 @@
 package jay.util;
 
+import java.util.List;
+
 import static jay.util.Util.memset;
 
 /**
@@ -33,8 +35,11 @@ public final class StringBuilder {
     }
 
     public void append(final OrderedList<?> list){
-        for(int i = 0; i < list.size(); i++)
-            append(list.get(i).toString());
+        for(Object auto : list) append(auto);
+    }
+
+    public void append(final List<?> list){
+        for(Object o : list) append(o.toString());
     }
 
     public void push(final char c){
