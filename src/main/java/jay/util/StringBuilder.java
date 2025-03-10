@@ -25,6 +25,10 @@ public final class StringBuilder {
         }
     }
 
+    public void append(final char next[]) {
+        for(int i = 0; i < next.length; i++) append(next[i]);
+    }
+
     public void append(final String s){
         for(int i = 0; i < s.length(); i++)
             append(s.charAt(i));

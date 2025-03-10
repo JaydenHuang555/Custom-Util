@@ -3,7 +3,9 @@ package jay.util.hashtable;
 
 import jay.util.ForEachFunc;
 import jay.util.OrderedList;
+import sun.java2d.opengl.OGLContext;
 
+import java.util.Enumeration;
 import java.util.Iterator;
 
 public class HashTable<K extends Object, V extends Object> implements Iterable<HashTable.Entry> {
@@ -29,7 +31,7 @@ public class HashTable<K extends Object, V extends Object> implements Iterable<H
 
     private final int MAX;
 
-    private final Node table[];
+    private final Node[] table;
 
     private int hash(final K o){
         return (o.hashCode() << 5) % MAX;
@@ -61,7 +63,7 @@ public class HashTable<K extends Object, V extends Object> implements Iterable<H
         }
     }
 
-    public void put(K keys[], V vals[]){
+    public void put(K[] keys, V[] vals){
         if(keys.length != vals.length) throw new RuntimeException("arrays are not of same size");
         for(int i = 0; i < vals.length; i++)
             put(keys[i], vals[i]);
@@ -100,6 +102,29 @@ public class HashTable<K extends Object, V extends Object> implements Iterable<H
                     next = next.next;
                 }
             }
+    }
+
+    public OrderedList<Entry> getAsList(){
+        OrderedList<Entry> entries = new OrderedList<>();
+        for(Entry entry : this) entries.add(entry);
+        return entries;
+    }
+
+    public Enumeration<Entry> enumeration(){
+        return new Enumeration<Entry>(){
+            private int i = 0;
+            private final OrderedList<Entry> hhh = getAsList();
+
+            @Override
+            public boolean hasMoreElements() {
+                return i < hhh.size();
+            }
+
+            @Override
+            public Entry nextElement() {
+                return hhh.get(i++);
+            }
+        };
     }
 
     @Override
