@@ -80,6 +80,16 @@ public class HashTable<K extends Object, V extends Object> implements Iterable<H
         }
         throw new RuntimeException("table does not contain key");
     }
+    @SuppressWarnings("unchecked")
+    public void remove(K key) {
+        HashTable<K, V> other = new HashTable<>();
+        for(int i = 0; i < MAX; i++) {
+            Node node = table[i];
+            while(node != null) {
+                if(!node.equals(key)) other.put((K)node.key, (V)node.val);
+            }
+        }
+    }
 
     public boolean contains(K key){
         for(Entry entry : this)

@@ -56,6 +56,22 @@ public class OrderedList<T extends Object> implements Iterable<T> {
         return false;
     }
 
+    public void pruneFirst(T target) {
+        boolean found = false;
+        OrderedList<T> next = new OrderedList<>();
+        for(T item : this) {
+            if(found || (item.equals(target) || item == target)){
+                next.add(item);
+            }
+            if(item.equals(target) || item == target) {
+                found = true;
+            }
+        }
+        Util.arrayCopy(buffer, next.buffer);
+        off = next.off;
+        len = next.len;
+    }
+
     public int size(){
         return off;
     }

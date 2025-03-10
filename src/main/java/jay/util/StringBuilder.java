@@ -1,5 +1,6 @@
 package jay.util;
 
+import java.util.Iterator;
 import java.util.List;
 
 import static jay.util.Util.memset;
@@ -7,7 +8,7 @@ import static jay.util.Util.memset;
 /**
  * string appending in java creates a new string cause java is stupid
  */
-public final class StringBuilder {
+public final class StringBuilder implements Iterable{
 
     private char buffer[] = null;
     private int off = 0, len = 1 << 3;
@@ -70,6 +71,29 @@ public final class StringBuilder {
         char next[] = new char[off];
         for(int i = 0; i < off; i++) next[i] = buffer[i];
         return new String(next);
+    }
+    @Override
+    public Iterator<Character> iterator() {
+        return new JayClassIterator(this);
+    }
+
+    private class JayClassIterator implements Iterator<Character> {
+
+        private int i = 0;
+        private String buffer;
+        private JayClassIterator(StringBuilder buffer){
+            this.buffer = buffer.toString();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return i < buffer.length();
+        }
+
+        @Override
+        public Character next() {
+            return buffer.charAt(i++);
+        }
     }
 
 }

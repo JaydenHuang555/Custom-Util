@@ -1,5 +1,7 @@
 package jay.util;
 
+import java.io.OutputStream;
+
 public class StopWatch extends PeriodicClass{
 
     private double passed;
@@ -13,7 +15,15 @@ public class StopWatch extends PeriodicClass{
         if(!started) {
             passed = 0;
             started = true;
+
         }
+    }
+
+    /**
+     * @return time passed in seconds
+     * */
+    public double get() {
+        return passed;
     }
 
     public void pause(){

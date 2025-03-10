@@ -1,6 +1,7 @@
 package jay.util;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -56,8 +57,32 @@ public final class Logger {
         runChecks();
     }
 
-    public static void log() {
+    public static void logf(final String message, Object ... args) {
         Util.requireNonNull(outputFile);
+        try (StreamWriter writer = new StreamWriter(outputFile)){
+            int argsIndex = 0;
+            for(int i = 0; i < message.length(); i++) {
+                char c = message.charAt(i);
+                if(c == '%') {
+                    c = message.charAt(++i);
+                    switch (c) {
+                        case 'c':
+                        case 'd':
+                        case 'l':
+                        case 'f':
+                        case 's':
+                            writer.write(args[argsIndex++]);
+                            break;
+                    }
+                }
+                else writer.write(c);
+            }
+            writer.flush();
+        } catch (Exception e) {
+            System.err.print("unable to log");
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 }

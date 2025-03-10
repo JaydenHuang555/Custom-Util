@@ -1,5 +1,8 @@
 package jay.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -42,6 +45,15 @@ public class Util {
         for(int i = 0; i < holders.length; i++)
             buffer[i] = holders[i].toString();
         return buffer;
+    }
+
+    public static void writeToFile(File output, final String message) {
+        try (FileOutputStream stream = new FileOutputStream(output)) {
+            for(int i = 0; i < message.length(); i++)
+                stream.write(message.charAt(i));
+        } catch (Exception e) {
+            throw new RuntimeException("unable to write to file");
+        }
     }
 
     public static void fillHourMinuteSecond(Holder<Integer> hour, Holder<Integer> minute, Holder<Integer> second) {

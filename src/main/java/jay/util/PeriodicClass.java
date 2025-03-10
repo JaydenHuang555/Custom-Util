@@ -12,7 +12,6 @@ public abstract class PeriodicClass {
 
         @Override
         public void run(){
-
             object.periodic();
         }
     }
