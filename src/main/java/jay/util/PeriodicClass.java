@@ -16,7 +16,9 @@ public abstract class PeriodicClass {
         }
     }
 
-    protected PeriodicClass(){}
+    protected PeriodicClass(){
+        new PeriodicThread(this);
+    }
 
     public abstract void periodic();
 }

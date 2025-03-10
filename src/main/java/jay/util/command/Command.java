@@ -1,20 +1,26 @@
 package jay.util.command;
 
+import jay.util.DelayedBoolean;
 import jay.util.PeriodicClass;
 import jay.util.StopWatch;
 
-public abstract class Command extends PeriodicClass {
+import java.io.Closeable;
+import java.io.IOException;
+
+public abstract class Command extends PeriodicClass implements Closeable {
 
     protected String name;
-    protected double timeoutInSeconds = Double.POSITIVE_INFINITY;
-    private StopWatch timeoutStopwatch = new StopWatch();
+    private DelayedBoolean timeout;
+    private double timeoutDelay = Double.POSITIVE_INFINITY;
+    private boolean isRunning = false;
     private InterruptionBehavior interruptionBehavior = InterruptionBehavior.CANCEL_SELF;
 
     protected boolean isFinished = false;
 
     public Command() {
+        super();
         init();
-        timeoutStopwatch.startIfNotStarted();
+        timeout = new DelayedBoolean(() -> timeout.passed(), timeoutDelay);
     }
 
     public Command(final String name){
@@ -23,7 +29,9 @@ public abstract class Command extends PeriodicClass {
     }
 
     public abstract void init();
-    public abstract void execute();
+    public void execute() {
+
+    }
     public boolean isFinished(){
         return isFinished;
     }
@@ -45,9 +53,12 @@ public abstract class Command extends PeriodicClass {
 
     @Override
     public void periodic() {
-        if(timeoutStopwatch.get() >= timeoutInSeconds) {
-            end(false);
-        }
+        timeout.waitTillTimePassed();
+        if(timeout.get()) end(true);
     }
 
+    @Override
+    public void close()  {
+        end(true);
+    }
 }

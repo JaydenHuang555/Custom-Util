@@ -12,7 +12,9 @@ public class OrderedCommandGroup extends Command{
 
     @Override
     public void init() {
-
+        for(Command command : commands) {
+            command.init();
+        }
     }
 
     @Override

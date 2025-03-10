@@ -1,21 +1,22 @@
 package jay.util;
 
 import java.io.OutputStream;
+import java.util.function.BooleanSupplier;
 
-public class StopWatch extends PeriodicClass{
+public class StopWatch extends PeriodicClass {
 
     private double passed;
-    private boolean started = false, paused = false;
+    private boolean paused = false;
+    private BooleanSupplier started;
 
     public StopWatch(){
-        passed = 0;
+        passed = Double.POSITIVE_INFINITY;
+        started = () -> Double.isInfinite(passed);
     }
 
     public void startIfNotStarted(){
-        if(!started) {
+        if(started.getAsBoolean()) {
             passed = 0;
-            started = true;
-
         }
     }
 
@@ -35,15 +36,14 @@ public class StopWatch extends PeriodicClass{
     }
 
     public void stop(){
-        started = false;
+        passed = Double.POSITIVE_INFINITY;
         paused = false;
-        passed = 0;
     }
 
     @Override
     public void periodic() {
         try {
-            if(started && !paused) {
+            if(started.getAsBoolean() && !paused) {
                 Thread.sleep(1000);
                 passed++;
             }
