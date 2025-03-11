@@ -2,17 +2,23 @@ package jay.util;
 
 import java.io.*;
 
-public class StreamWriter implements Closeable {
+public class StreamWriter implements Closeable, Flushable {
 
     private final OutputStream os;
-    private boolean autoFlush = false;
+    private boolean autoFlush = false, autoAppend = false;
+    private boolean osClosed = true, isClosed = true;
+    private final InputStream is;
 
     public StreamWriter(File file) throws Exception {
-        this(new FileOutputStream(file));
+        this(new FileOutputStream(file), new FileInputStream(file));
     }
 
-    public StreamWriter(final OutputStream os) {
+    public StreamWriter(final OutputStream os, final InputStream is) throws Exception {
         this.os = os;
+        this.is = is;
+        this.autoAppend = is == null ? true : false;
+        osClosed = false;
+        isClosed = false;
     }
 
     public StreamWriter withAutoFlush(final boolean autoFlush) {
@@ -49,6 +55,11 @@ public class StreamWriter implements Closeable {
         write(String.valueOf(o));
     }
 
+    public void endline() {
+        write('\n');
+    }
+
+    @Override
     public void flush() {
         try {
             os.flush();
@@ -60,7 +71,8 @@ public class StreamWriter implements Closeable {
     }
 
     public void close() throws IOException {
-        os.close();
-    }
+        if(!osClosed) os.close();
+        if(!isClosed) is.close();
 
+    }
 }

@@ -2,6 +2,7 @@ package jay.util;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static jay.util.Util.memset;
 
@@ -62,8 +63,8 @@ public final class StringBuilder implements Iterable{
         return off == 0;
     }
 
-    public void foreach(ForEachFunc f){
-        for(int i = 0; i < off; i++) f.f(buffer[i]);
+    public void foreach(Consumer<Character> f){
+        for(int i = 0; i < off; i++) f.accept(buffer[i]);
     }
 
     @Override

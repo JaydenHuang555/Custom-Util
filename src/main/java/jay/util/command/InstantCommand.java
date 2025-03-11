@@ -1,8 +1,10 @@
 package jay.util.command;
 
+import jay.util.Runnable;
+
 public class InstantCommand extends Command {
 
-    private Runnable runnable;
+    private jay.util.Runnable runnable;
     private boolean isFinished = false;
 
     public InstantCommand(Runnable runnable) {

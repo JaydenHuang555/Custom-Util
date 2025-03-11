@@ -29,9 +29,7 @@ public abstract class Command extends PeriodicClass implements Closeable {
     }
 
     public abstract void init();
-    public void execute() {
-
-    }
+    public abstract void execute();
     public boolean isFinished(){
         return isFinished;
     }

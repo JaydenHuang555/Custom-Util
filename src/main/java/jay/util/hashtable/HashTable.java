@@ -1,16 +1,15 @@
 package jay.util.hashtable;
 
 
-import jay.util.ForEachFunc;
 import jay.util.OrderedList;
-import sun.java2d.opengl.OGLContext;
 
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class HashTable<K extends Object, V extends Object> implements Iterable<HashTable.Entry> {
 
-    public final class Entry {
+    public final class Entry<K, V> {
         private final Node node;
 
         public Entry(final Node node){
@@ -103,12 +102,12 @@ public class HashTable<K extends Object, V extends Object> implements Iterable<H
         return false;
     }
 
-    public void foreach(ForEachFunc<Entry> f){
+    public void foreach(Consumer<Entry> f){
         for(int i = 0; i < MAX; i++)
             if(table[i] != null){
                 Node next = table[i];
                 while(next != null){
-                    f.f(new Entry(next));
+                    f.accept(new Entry(next));
                     next = next.next;
                 }
             }

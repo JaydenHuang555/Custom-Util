@@ -2,6 +2,7 @@ package jay.util;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class OrderedList<T extends Object> implements Iterable<T> {
 
@@ -45,7 +46,7 @@ public class OrderedList<T extends Object> implements Iterable<T> {
     }
     @SuppressWarnings("unchecked")
     public T get(int index){
-        if(index > off || index < 0) throw new RuntimeException("invalid index");
+        if(index > off || index < 0) throw new IndexConflictBoundException(index, off - 1);
         return (T)buffer[index];
     }
 
@@ -72,13 +73,17 @@ public class OrderedList<T extends Object> implements Iterable<T> {
         len = next.len;
     }
 
+    public boolean isEmpty() {
+        return off == 0;
+    }
+
     public int size(){
         return off;
     }
 
     @SuppressWarnings("unchecked")
-    public void foreach(ForEachFunc<T> f){
-        for(int i = 0; i < off; i++) f.f((T)buffer[i]);
+    public void foreach(Consumer<T> f){
+        for(int i = 0; i < off; i++) f.accept((T)buffer[i]);
     }
 
     @Override

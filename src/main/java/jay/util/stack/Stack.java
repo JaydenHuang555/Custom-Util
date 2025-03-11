@@ -1,14 +1,13 @@
 package jay.util.stack;
 
-import jay.util.ForEachFunc;
-import jdk.jfr.internal.consumer.ChunkHeader;
+import java.util.function.Consumer;
 
 public class Stack<T extends Object> {
 
     private Node head, tail;
 
     public Stack(){
-
+        head = tail = null;
     }
 
     public void push(T item){
@@ -44,12 +43,12 @@ public class Stack<T extends Object> {
     }
 
     @SuppressWarnings("unchecked")
-    public void foreach(ForEachFunc<T> f){
+    public void foreach(Consumer<T> f){
         int cap = 0x400, i = 0;
         for(Node next = head; next != null;){
             if(i++ == cap)
                 throw new RuntimeException("for each has reached cap iteration");
-            f.f((T)next.val);
+            f.accept((T)next.val);
             next = next.next;
         }
     }

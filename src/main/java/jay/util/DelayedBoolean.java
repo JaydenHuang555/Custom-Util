@@ -12,6 +12,7 @@ public class DelayedBoolean {
 
     public DelayedBoolean(Supplier<Boolean> supplier, double timeInSeconds) {
         Util.requireNonNull(supplier);
+        Util.requireNonNaN(timeInSeconds);
         if(timeInSeconds == Double.POSITIVE_INFINITY) {
             System.err.println("unable to set timeout to infinite");
             throw new RuntimeException();

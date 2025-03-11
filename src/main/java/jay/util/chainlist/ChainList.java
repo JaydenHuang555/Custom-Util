@@ -33,23 +33,24 @@ public class ChainList<T> implements Iterable{
     private final class ChainListIterator implements Iterator<T> {
 
         private final ChainList<T> chainList;
-        private Node next = head;
+        private Node next;
         boolean passedHead = false;
 
 
         private ChainListIterator(ChainList<T> chainlist){
             this.chainList = chainlist;
+            next = chainlist.head;
         }
 
         @Override
         public boolean hasNext() {
-            return next == head && passedHead;
+            return next == chainList.head && passedHead;
         }
 
         @Override @SuppressWarnings("unchecked")
         public T next() {
             Node ret = next;
-            if(!passedHead && next == head) passedHead = true;
+            if(!passedHead && next == chainList.head) passedHead = true;
             next = next.next;
             return (T)ret.item;
         }
