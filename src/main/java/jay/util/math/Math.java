@@ -34,10 +34,21 @@ public class Math {
         return pwr(theta, 2);
     }
 
+    public final static double factorial(double theta) {
+        double ret = 1;
+        for(int i = 0; i <= theta; i++) ret = ret * theta;
+        return ret;
+    }
+
     public final static long factorial(long b){
         long ret = 1;
         for(int i = 0; i <= b; i++) ret = ret * b;
         return ret;
+    }
+
+    public final static double nCr(final double n, final double r) {
+        /*(n!)/(r!*(n-r)!)*/
+        return factorial(n)/(factorial(r) * factorial(n - r));
     }
 
     public final static double tan(double theta) {
