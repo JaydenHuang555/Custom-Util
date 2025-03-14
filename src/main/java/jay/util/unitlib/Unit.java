@@ -8,9 +8,10 @@ package jay.util.unitlib;
 public abstract class Unit {
 
     protected double val;
+    private final double mutli;
 
-    protected Unit(double val) {
-        this.val = val;
+    protected Unit(double multi) {
+        this.mutli = multi;
     }
 
     public Unit of(double theta) {
@@ -27,9 +28,13 @@ public abstract class Unit {
         return convert(unit.base());
     }
 
-    public abstract double base();
+    public double base() {
+        return val / mutli;
+    }
 
-    public abstract double convert(double theta);
+    public double convert(double theta) {
+        return theta * mutli;
+    }
 
     public double in(Unit unit) {
         return unit.convert(this);

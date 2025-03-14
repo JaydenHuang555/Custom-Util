@@ -30,10 +30,38 @@ public class Math {
         else return p * pwr(p, n - 1);
     }
 
+    public final static double squared(double theta) {
+        return pwr(theta, 2);
+    }
+
     public final static long factorial(long b){
         long ret = 1;
         for(int i = 0; i <= b; i++) ret = ret * b;
         return ret;
+    }
+
+    public final static double tan(double theta) {
+        return StrictMath.tan(theta);
+    }
+
+    public final static double atan(double theta) {
+        return StrictMath.atan(theta);
+    }
+
+    public final static double cos(double theta) {
+        return StrictMath.cos(theta);
+    }
+
+    public final static double acos(double theta) {
+        return StrictMath.acos(theta);
+    }
+
+    public final static double sin(double theta) {
+        return StrictMath.sin(theta);
+    }
+
+    public final static double asin(double theta) {
+        return StrictMath.asin(theta);
     }
 
     /**

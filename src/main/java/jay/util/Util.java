@@ -7,10 +7,7 @@ import java.util.GregorianCalendar;
 
 public class Util {
 
-    public static class MetricConverter {
 
-
-    }
 
     public static class TimeAndDateUtil {
 

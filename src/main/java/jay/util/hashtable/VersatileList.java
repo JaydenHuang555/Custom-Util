@@ -14,7 +14,7 @@ public class VersatileList<K, V> extends HashTable<K, V> {
     @Override
     public void put(K key, V val) {
         super.put(key, val);
-        pairs.add(new Pair<K, V>(key, val));
+        pairs.add(new Pair<>(key, val));
     }
 
     @Override

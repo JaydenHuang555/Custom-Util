@@ -26,6 +26,13 @@ public class OrderedList<T extends Object> implements Iterable<T> {
         for(int i = 0; i < other.len; i++) add((T)other.buffer[i]);
     }
 
+    public void set(final OrderedList<?> other) {
+        off = other.off;
+        len = other.len;
+        buffer = new Object[other.size()];
+        Util.arrayCopy(buffer, other.buffer);
+    }
+
     public void addAll(T arr[]){
         for(int i = 0; i < arr.length; i++) add(arr[i]);
     }
@@ -68,9 +75,17 @@ public class OrderedList<T extends Object> implements Iterable<T> {
                 found = true;
             }
         }
-        Util.arrayCopy(buffer, next.buffer);
-        off = next.off;
-        len = next.len;
+        set(next);
+    }
+
+    public void pruneFirstWithSameAddr(T target) {
+        boolean found = false;
+        OrderedList<T> next = new OrderedList<>();
+        for(T item : this) {
+            if(found || target != item) next.add(item);
+            else if(target == item) found = true;
+        }
+        set(next);
     }
 
     public boolean isEmpty() {

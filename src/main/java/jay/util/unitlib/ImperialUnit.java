@@ -2,6 +2,9 @@ package jay.util.unitlib;
 
 public class ImperialUnit extends Unit{
 
+    public final static ImperialUnit INCH = new ImperialUnit(12);
+
+
     private final double multi;
 
     protected ImperialUnit(final double multi) {
@@ -9,13 +12,4 @@ public class ImperialUnit extends Unit{
         this.multi = multi;
     }
 
-    @Override
-    public double base() {
-        return val / multi;
-    }
-
-    @Override
-    public double convert(double theta) {
-        return theta * multi;
-    }
 }
