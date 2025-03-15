@@ -33,4 +33,14 @@ public class TriangleUtil {
         return findAngleLOS(Math.sin(a) / A, C);
     }
 
+    public final static double area(final double w, final double h) {
+        /* 1/2 * (w * h) */
+        return (w * h)/2;
+    }
+
+    public final static double area(final double a, final double b, final double c) {
+        // 1/2 * a * b * sin(c)
+        return 1/2 * a * b * Math.sin(c);
+    }
+
 }

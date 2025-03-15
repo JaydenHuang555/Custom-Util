@@ -75,14 +75,16 @@ public class Math {
         return StrictMath.asin(theta);
     }
 
-    /**
-     *
-     * @param equation string form of the equation
-     * @return the pemdas evaluation
-     *
-     * uses postfix notation and the shunting algorithm for efficiency
-     */
-    public final static double eval(final String equation){
+    public final static OrderedList<Token> getInfixFromPostfixAsCollection(final String postfix) {
+        OrderedList<Token> infix = new OrderedList<>();
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < postfix.length(); i++) {
+            throw new RuntimeException("unsupported");
+        }
+        return infix;
+    }
+
+    public final static OrderedList<Token> getPostfixFromInfixAsCollection(final String equation) {
         OrderedList<Token> tokens = new OrderedList<>();
         Stack<Token> stack = new Stack<>();
         StringBuilder builder = new StringBuilder();
@@ -116,7 +118,19 @@ public class Math {
         if(!builder.isEmpty()) tokens.add(new OperandToken(builder.toString()));
         while(!stack.isEmpty())
             tokens.add(stack.pop());
+        return tokens;
+    }
 
+    /**
+     *
+     * @param equation string form of the equation
+     * @return the pemdas evaluation
+     *
+     * uses postfix notation and the shunting algorithm for efficiency
+     */
+    public final static double eval(final String equation){
+        OrderedList<Token> tokens = getPostfixFromInfixAsCollection(equation);
+        Stack<Token> stack = new Stack<>();
         for(int i = 0; i < tokens.size(); i++){
             Token token = tokens.get(i);
             if(token instanceof OperandToken) stack.push(token);
