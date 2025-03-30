@@ -3,6 +3,7 @@ package jay.util.math;
 import jay.util.OrderedList;
 import jay.util.StringBuilder;
 
+import jay.util.Util;
 import jay.util.hashtable.HashTable;
 import jay.util.stack.Stack;
 
@@ -122,12 +123,36 @@ public class Math {
     }
 
     public static final String getPostfixFromInfixAsString(String infix) {
-        OrderedList<Token> tokens = getPostfixFromInfixAsCollection(infix);
-        StringBuilder builder = new StringBuilder();
-        for(Token token : tokens) {
-            builder.append(token.toString());
+        StringBuilder builder = new StringBuilder(), postfix = new StringBuilder();
+        Stack<OperatorToken> stack = new Stack<>();
+        for(int i = 0; i < infix.length(); i++) {
+            char c = infix.charAt(i);
+            if(Util.isNum(c) || c == '.') {
+                builder.append(c);
+            }
+            if(operatorPrec(c) != 0) {
+                if(!builder.isEmpty()) {
+                    postfix.append(builder);
+                    builder = new StringBuilder();
+                }
+                switch(c) {
+                    case '(':
+                        stack.push(new ParaToken());
+                        break;
+                    case ')':
+                        while(!stack.isEmpty() && !(stack.peek() instanceof ParaToken))
+                            builder.append(stack.pop());
+                        stack.pop();
+                    default:
+                        while(!stack.isEmpty() && stack.peek().prec() > operatorPrec(c))
+                            builder.append(stack.pop());
+                        stack.push(precMap.get(c));
+                }
+            }
         }
-        return builder.toString();
+        while(!stack.isEmpty())
+            builder.append(stack.pop());
+        return postfix.toString();
     }
 
     /**

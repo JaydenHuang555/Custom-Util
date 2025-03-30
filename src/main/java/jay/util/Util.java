@@ -177,7 +177,24 @@ public class Util {
         return src;
     }
 
-    public boolean inRange(double theta, double low, double high) {
+    public static boolean isNum(final char c) {
+        return '0' <= c && c <= '9';
+    }
+
+    public static boolean isNum(final String s) {
+        for(int i = 0; i < s.length(); i++)
+            if(!isNum(s.charAt(i))) return false;
+        return true;
+    }
+
+    public static boolean isNum(final char buffer[]) {
+        for(int i = 0; i < buffer.length; i++) {
+            if(!isNum(buffer[i])) return false;
+        }
+        return true;
+    }
+
+    public static boolean inRange(double theta, double low, double high) {
         return low <= theta && theta <= high;
     }
 

@@ -38,5 +38,4 @@ public class Pair<T1, T2> {
                 next.getSecond().equals(getSecond())
                 || this == next;
     }
-
 }
