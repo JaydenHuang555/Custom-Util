@@ -3,50 +3,34 @@ package jay.util;
 import java.io.OutputStream;
 import java.util.function.BooleanSupplier;
 
-public class StopWatch extends PeriodicClass {
+public class StopWatch {
 
-    private double passed;
-    private boolean paused = false;
-    private BooleanSupplier started;
+    private final long startTimeStamp;
+    private long currentTimeStamp;
 
-    public StopWatch(){
-        passed = Double.POSITIVE_INFINITY;
-        started = () -> Double.isInfinite(passed);
+    public StopWatch() {
+        startTimeStamp = System.currentTimeMillis();
+        currentTimeStamp = -1;
     }
 
-    public void startIfNotStarted(){
-        if(started.getAsBoolean()) {
-            passed = 0;
+    public void start() {
+        new Thread(() -> {
+            while(true) currentTimeStamp = System.currentTimeMillis();
+        });
+    }
+
+    public void startIfNotStarted() {
+        if(currentTimeStamp == -1) {
+            start();
         }
     }
 
-    /**
-     * @return time passed in seconds
-     * */
     public double get() {
-        return passed;
+        return (double)currentTimeStamp / 100d;
     }
 
-    public void pause(){
-        paused = true;
+    public void reset() {
+        currentTimeStamp = -1;
     }
 
-    public void unpause(){
-        paused = false;
-    }
-
-    public void stop(){
-        passed = Double.POSITIVE_INFINITY;
-        paused = false;
-    }
-
-    @Override
-    public void periodic() {
-        try {
-            if(started.getAsBoolean() && !paused) {
-                Thread.sleep(1000);
-                passed++;
-            }
-        } catch (Exception e){}
-    }
 }

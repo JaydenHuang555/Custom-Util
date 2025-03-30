@@ -1,13 +1,19 @@
 package jay.util;
 
+import jay.util.math.Math;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Util {
 
-
+    public Util() throws Exception {
+        throw new Exception("this is an util class and should not be allocated dynamically");
+    }
 
     public static class TimeAndDateUtil {
 
@@ -21,6 +27,10 @@ public class Util {
             day.set(calendar.get(Calendar.DATE));
             month.set(calendar.get(Calendar.MONTH));
             year.set(calendar.get(Calendar.YEAR));
+        }
+
+        public static void fillNumericYearMonthDay(Holder<Integer> year, Holder<Integer> month, Holder<Integer> day) {
+            fillNumericDayMonthYear(day, month, year);
         }
 
         /**
@@ -63,14 +73,26 @@ public class Util {
         return buffer;
     }
 
-    public static void writeToFile(File output, final String message) {
-        try (FileOutputStream stream = new FileOutputStream(output)) {
+    public static void writeToOutputStream(OutputStream os, final String message) {
+        try (os) {
             for(int i = 0; i < message.length(); i++)
-                stream.write(message.charAt(i));
+                os.write(message.charAt(i));
         } catch (Exception e) {
             e.printStackTrace(System.out);
             throw new RuntimeException("unable to write to file");
         }
+    }
+
+    public static void writeToFile(File output, final String message) {
+        try {
+            writeToOutputStream(new FileOutputStream(output), message);
+        } catch (Exception e) {
+            throw new RuntimeException("unable to write to file: "+e.toString());
+        }
+    }
+
+    public static void printf(final String message) {
+        writeToOutputStream(System.out, message);
     }
 
     public static void writeToFile(File output, Object o) {
@@ -153,6 +175,22 @@ public class Util {
         for(int i = off; i < len; i++)
             src[i] = dst[i];
         return src;
+    }
+
+    public boolean inRange(double theta, double low, double high) {
+        return low <= theta && theta <= high;
+    }
+
+    public static boolean epsilonEquals(double theta, double beta, double epsilon) {
+        return Math.epsilonEquals(theta, beta, epsilon);
+    }
+
+    public static boolean epsilonEquals(long theta, long beta, long epsilon) {
+        return Math.epsilonEquals(theta, beta, epsilon);
+    }
+
+    public static boolean epsilonEquals(int theta, int beta, int epsilon) {
+        return Math.epsilonEquals(theta, beta, epsilon);
     }
 
     public static <T> void memset(T buffer[], T item, int off, int len){

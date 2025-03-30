@@ -20,7 +20,6 @@ public abstract class Command extends PeriodicClass implements Closeable {
     public Command() {
         super();
         init();
-        timeout = new DelayedBoolean(() -> timeout.passed(), timeoutDelay);
     }
 
     public Command(final String name){
@@ -51,8 +50,6 @@ public abstract class Command extends PeriodicClass implements Closeable {
 
     @Override
     public void periodic() {
-        timeout.waitTillTimePassed();
-        if(timeout.get()) end(true);
     }
 
     @Override

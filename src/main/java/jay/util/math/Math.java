@@ -47,7 +47,7 @@ public class Math {
     }
 
     public final static double nCr(final double n, final double r) {
-        /*(n!)/(r!*(n-r)!)*/
+        /*nCr = (n!)/(r!*(n-r)!) */
         return factorial(n)/(factorial(r) * factorial(n - r));
     }
 
@@ -121,11 +121,18 @@ public class Math {
         return tokens;
     }
 
+    public static final String getPostfixFromInfixAsString(String infix) {
+        OrderedList<Token> tokens = getPostfixFromInfixAsCollection(infix);
+        StringBuilder builder = new StringBuilder();
+        for(Token token : tokens) {
+            builder.append(token.toString());
+        }
+        return builder.toString();
+    }
+
     /**
-     *
      * @param equation string form of the equation
      * @return the pemdas evaluation
-     *
      * uses postfix notation and the shunting algorithm for efficiency
      */
     public final static double eval(final String equation){
@@ -141,6 +148,22 @@ public class Math {
             }
         }
         return ((OperandToken)stack.pop()).get();
+    }
+
+    public double abs(double theta) {
+        return theta * -1;
+    }
+
+    public static boolean epsilonEquals(double theta, double beta, double epsilon) {
+        return theta + epsilon <= beta || theta - epsilon >= beta;
+    }
+
+    public static boolean epsilonEquals(long theta, long beta, long epsilon) {
+        return theta + epsilon <= beta || theta - epsilon >= beta;
+    }
+
+    public static boolean epsilonEquals(int theta, int beta, int epsilon) {
+        return theta + epsilon <= beta || theta - epsilon >= beta;
     }
 
 }

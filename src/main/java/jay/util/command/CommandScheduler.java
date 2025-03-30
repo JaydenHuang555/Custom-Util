@@ -19,9 +19,22 @@ public class CommandScheduler {
     }
 
     private Command getNextScheduled() {
-        for(HashTable.Entry<Command, CommandInfo> entry : scheduledCommands) {
-            CommandInfo info = entry.val();
-        }
+        return new Command() {
+            @Override
+            public void init() {
+
+            }
+
+            @Override
+            public void execute() {
+
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+
+            }
+        };
     }
 
     public void run() {
